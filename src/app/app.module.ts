@@ -12,6 +12,20 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { HeaderComponent } from './components/header/header.component';
+import { MatDateFormats, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { NotificationModule, NotificationService } from './services';
+
+const APP_DATE_FORMATS: MatDateFormats = {
+  parse: {
+      dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' },
+  },
+  display: {
+      dateInput: { day: 'numeric', month: 'short', year: 'numeric' },
+      monthYearLabel: { year: 'numeric', month: 'short' },
+      dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+      monthYearA11yLabel: { year: 'numeric', month: 'long' }
+  }
+};
 
 @NgModule({
   declarations: [
@@ -26,10 +40,15 @@ import { HeaderComponent } from './components/header/header.component';
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFirestoreModule,
+    MatNativeDateModule,
+    NotificationModule.forRoot()
     // EffectsModule.forRoot([]),
     // StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
-  providers: [],
+  providers: [
+      { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+      { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
