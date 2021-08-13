@@ -30,7 +30,7 @@
     "@ngrx/entity": "^12.3.0",
     "@ngrx/store": "^12.3.0",
     "@ngrx/store-devtools": "^12.3.0",
-    "firebase": "^8.9.0",
+    "firebase": "^8.9.1",
     "ngx-image-cropper": "^4.0.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
