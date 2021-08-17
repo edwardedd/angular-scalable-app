@@ -3,7 +3,7 @@ import {Action, createReducer, on} from '@ngrx/store';
 import * as fromActions from './dictionaries.actions';
 
 export interface State {
-    entities: Dictionaries | null;
+    entities: Dictionaries;
     loading: boolean ;
     error: any;
 }

@@ -2,6 +2,9 @@ import { Component,OnInit } from '@angular/core';
 import { environment } from '@src/environments/environment';
 import { test } from '@app/test';
 // import { AngularFirestore } from '@angular/fire/firestore';
+import * as fromDictionaries from './store/dictionaries';
+import * as fromRoot from './store';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-root',
@@ -11,11 +14,11 @@ import { test } from '@app/test';
 export class AppComponent implements OnInit{
   title = 'angular-front-back-course';
 
-  constructor(){
+  constructor(private store:Store<fromRoot.State>){
 
   }
 
   ngOnInit() {
-
+    this.store.dispatch(fromDictionaries.Read())
   }
 }

@@ -1,7 +1,7 @@
-import { firestore } from 'firebase/app'
+import firestore from 'firebase/app'
 export interface Job {
     title: string;
     salary: number;
-    created: firestore.FieldValue;
-    updated?: firestore.FieldValue;
+    created: firestore.firestore.FieldValue;
+    updated?: firestore.firestore.FieldValue;
 }
