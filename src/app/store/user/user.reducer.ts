@@ -16,11 +16,19 @@ const initialState: State = {
     error: null
 };
 
+export interface testState {
+  word: string
+}
+
+const initialTestState: testState = {
+  word: null
+}
+
 const userReducer = createReducer(
   initialState,
   on(fromActions.Init, (state) => ({
     ...state,
-    loading: true
+    loading: false
   })),
   on(fromActions.InitAuthorized, (state, action) =>({
     ...state,
@@ -65,9 +73,9 @@ const userReducer = createReducer(
     ...state,
     loading: true
   })),
-  on(fromActions.SignUpEmailSuccess, (state, action) => ({
+  on(fromActions.SignUpEmailSuccess, (state,  uid ) => ({
     ...state,
-    uid: action.uid,
+    uid: uid.uid,
     loading: false,
     error: null
   })),
@@ -82,13 +90,18 @@ const userReducer = createReducer(
     loading: true
   })),
   on(fromActions.SignOutSuccess, (state) => ({
-    ...state
+    ...initialState
   })),
   on(fromActions.SignOutError, (state, action) => ({
     ...state,
     loading: true,
     error: action.error
   })),
+
+  on(fromActions.TestClick, (initialTestState, word) => ({
+    ...initialTestState,
+    word: word
+  }))
 
 )
 

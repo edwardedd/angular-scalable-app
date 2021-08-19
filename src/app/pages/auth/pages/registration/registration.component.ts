@@ -62,20 +62,26 @@ export class RegistrationComponent implements OnInit {
   }
 
 onSubmit(): void {
-  if (this.form.valid) {
+    if (this.form.valid) {
 
-      const value = this.form.value;
+        const value = this.form.value;
 
-      const credentials: fromUser.EmailPasswordCredentials = {
-          email: value.email,
-          password: value.password
-      };
+        const credentials: fromUser.EmailPasswordCredentials = {
+            email: value.email,
+            password: value.password
+        };
 
-      this.store.dispatch(fromUser.SignUpEmail({credentials}));
+        this.store.dispatch(fromUser.SignUpEmail({credentials}));
 
-  } else {
-      markFormGroupTouched(this.form);
+    } else {
+        markFormGroupTouched(this.form);
+    }
   }
-}
+
+  Testing(){
+    console.log('111');
+    this.store.dispatch(fromUser.TestClick({word:'qwer444t'}))
+
+  }
 
 }

@@ -16,6 +16,7 @@ import { environment } from '@src/environments/environment';
 import * as fromActions from './user.actions';
 
 import { NotificationService } from '@app/services';
+import { State } from './user.reducer';
 
 @Injectable()
 
@@ -36,10 +37,11 @@ init = createEffect(() => this.actions.pipe(
   switchMap(authState => {
     if (authState) {
 
+
         return this.afs.doc<User>(`users/${authState.uid}`).valueChanges().pipe(
             take(1),
-            // map(user => fromActions.InitAuthorized(authState.uid, user || null)),
-            map(user => ({type: fromActions.Types.INIT_AUTHORIZED, payload: authState?.uid , user})),
+            map(user => fromActions.InitAuthorized({uid:authState.uid,user: user || null})),
+            // map(user => ({type: fromActions.Types.INIT_AUTHORIZED, payload: authState?.uid , user})),
             catchError(err => of(fromActions.InitError(err.message)))
         );
 
@@ -56,16 +58,13 @@ signInEmail = createEffect(() => this.actions.pipe(
   switchMap(credentials =>
     from(this.afAuth.createUserWithEmailAndPassword(credentials.email, credentials.password)).pipe(
         switchMap(signInState =>
-          this.afs.doc<User>(`users/${signInState?.user?.uid}`).valueChanges().pipe(
+          this.afs.doc<User>(`users/${signInState.user.uid}`).valueChanges().pipe(
               take(1),
               tap(() => {
                   this.router.navigate(['/']);
               }),
-              // map(user => fromActions.SignInEmailSuccess({signInState.user.uid , user}))
-              map(user => ({type: fromActions.Types.SIGN_IN_EMAIL_SUCCESS, payload: signInState?.user?.uid , user}))
+              map(user => fromActions.SignInEmailSuccess({uid:signInState.user.uid , user:user || null}))
           )
-
-
         ),
         catchError(err => {
             this.notification.error(err.message);
@@ -81,13 +80,26 @@ signUpEmail = createEffect(() => this.actions.pipe(
   switchMap(credentials =>
     from(this.afAuth.createUserWithEmailAndPassword(credentials.email, credentials.password)).pipe(
         tap(() => {
-            this.afAuth.currentUser.then(u => u?.sendEmailVerification(environment.firebase.actionCodeSettings))
+            this.afAuth.currentUser.then(u => {
+              console.log("uuu",u.uid);
+              // ({type: fromActions.Types.SIGN_UP_EMAIL_SUCCESS, payload: u.uid})
+              u.sendEmailVerification(environment.firebase.actionCodeSettings)
+            })
             .then(() => {
-
               this.router.navigate(['/auth/email-confirm']);
             })
         }),
-        map((signUpState: any) => fromActions.SignUpEmailSuccess(signUpState?.user?.uid )),
+        // map(signUpState => (
+        //   {type: fromActions.Types.SIGN_IN_EMAIL_SUCCESS, payload: signUpState.user.uid}
+
+        //   ),
+        //   tap((signUpState)=>{
+        //     console.log('1111',signUpState);
+
+        //   })),
+        map(
+          (signUpState) =>fromActions.SignUpEmailSuccess({uid:signUpState.user.uid})
+          ),
         catchError(err => {
             this.notification.error(err.message);
             return of(fromActions.SignUpEmailError(err.message));

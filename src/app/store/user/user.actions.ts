@@ -19,15 +19,21 @@ export enum Types {
     SIGN_OUT = '[User] Sign Out: Start',
     SIGN_OUT_SUCCESS = '[User] Sign Out: Success',
     SIGN_OUT_ERROR = '[User] Sign Out: Error',
+    TESTING = '[Test] Testing',
 }
 
 // Init
 
 export const Init = createAction(Types.INIT);
 
+export const TestClick = createAction(
+  Types.TESTING,
+  props<{word: string}>()
+);
+
 export const InitAuthorized = createAction(
   Types.INIT_AUTHORIZED,
-  props<{uid:string; user: User}>()
+  props<{uid; user}>()
 );
 
 export const InitUnauthorized = createAction(
@@ -49,7 +55,7 @@ export const SignInEmail = createAction(
 
 export const SignInEmailSuccess = createAction(
   Types.SIGN_IN_EMAIL_SUCCESS,
-  props<{uid: string, user: User}>()
+  props<{uid, user}>()
 );
 
 export const SignInEmailError = createAction(
