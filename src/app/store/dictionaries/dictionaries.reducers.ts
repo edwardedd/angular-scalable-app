@@ -3,7 +3,7 @@ import {Action, createReducer, on} from '@ngrx/store';
 import * as fromActions from './dictionaries.actions';
 
 export interface State {
-    entities: Dictionaries;
+    entities: any;
     loading: boolean ;
     error: any;
 }
@@ -21,7 +21,7 @@ const dictionariesReducer = createReducer(
         loading: true,
         error: null
     })),
-    on(fromActions.ReadSuccess,(state, {dictionaries}) => ({
+    on(fromActions.ReadSuccess,(state,dictionaries) => ({
         ...state,
         loading: false,
         entities: dictionaries,

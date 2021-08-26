@@ -11,7 +11,7 @@ export const Read = createAction(Types.READ);
 
 export const ReadSuccess = createAction (
   Types.READ_SUCCESS,
-  props<{dictionaries}>()
+  props<{dictionaries:Dictionaries}>()
 );
 
 export const ReadError = createAction(

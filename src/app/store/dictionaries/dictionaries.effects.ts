@@ -42,7 +42,11 @@ export class DictionariesEffects{
             return zip(
                 this.afs.collection('roles').snapshotChanges().pipe(
                     take(1),
-                    map(items => items.map(x => documentToItem(x)))
+                    map(items => items.map(x =>
+                        documentToItem(x)
+
+
+                    ))
                 ),
                 this.afs.collection('specializations').snapshotChanges().pipe(
                     take(1),
@@ -68,6 +72,9 @@ export class DictionariesEffects{
             ).pipe(
                 map(([roles, specializations, qualifications, skills, countries]) => {
 
+
+
+
                     const dictionaries:any = {
                         roles: addDictionary(roles),
                         specializations: addDictionary(specializations),
@@ -76,10 +83,12 @@ export class DictionariesEffects{
                         countries: addDictionary(countries)
                     };
 
+                    console.log('dictionariess',dictionaries)
+
                     return fromActions.ReadSuccess(dictionaries);
                 }),
                 catchError(err => of( fromActions.ReadError(err.message)))
-            );
+            )
         })
     ))
 
