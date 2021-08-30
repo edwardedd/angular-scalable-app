@@ -15,6 +15,7 @@ import * as fromUser from '@app/store/user';
 
 import { StepperService } from './components/stepper/services';
 import { PersonalForm } from './components/personal/personal.component';
+// import { ProfessionalForm } from './components/professional/professional.component';
 // import { MapperService } from './services';
 
 export interface ProfileForm {
@@ -72,9 +73,6 @@ export class FormComponent implements OnInit, OnDestroy {
         this.dictionaries$ = this.store.select(fromDictionaries.getDictionaries)
         this.dictionariesIsReady$ = this.store.pipe(select(fromDictionaries.getIsReady));
 
-        this.dictionariesIsReady$.subscribe(x => console.log('xxx-------------------------',x,)
-        )
-
 
         this.loading$ = this.store.pipe(select(fromUser.getLoading));
 
@@ -84,8 +82,8 @@ export class FormComponent implements OnInit, OnDestroy {
         // }
 
         this.stepper.init([
+            { key: 'professional', label: 'Professional' },
             { key: 'personal', label: 'Personal' },
-            { key: 'professional', label: 'Professional' }
         ]);
 
         this.stepper.complete$.pipe(
@@ -121,9 +119,11 @@ export class FormComponent implements OnInit, OnDestroy {
 
     }
 
-    // onChangedProfessional(data: ProfessionalForm): void {
-    //     this.store.dispatch(new fromForm.Update({ professional: data }));
-    // }
+    onChangedProfessional(data: any): void {
+        // this.store.dispatch(new fromForm.Update({ professional: data }));
+        console.log('data',data);
+
+    }
 
     // private onComplete(profile: ProfileForm, user: fromUser.User, dictionaries: fromDictionaries.Dictionaries): void {
     //     if (this.isEditing) {

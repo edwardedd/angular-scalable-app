@@ -8,7 +8,7 @@ import {
 } from '@app/shared/controls';
 import { FilesUploadModule } from '@app/shared/popups';
 import { SpinnerModule } from '@app/shared/indicators';
-// import { UserPhotoModule } from '@app/shared/layout';
+import { UserPhotoModule } from '@app/shared/layout';
 import { ButtonModule } from '@app/shared/buttons';
 
 import { FormRoutingModule } from './form-routing.module';
@@ -16,10 +16,12 @@ import { FormComponent } from './form.component';
 import { StepperModule } from './components';
 import { PersonalComponent } from './components/personal/personal.component';
 import { ProfessionalComponent } from './components/professional/professional.component';
+import { EmployeeComponent } from './components/professional/roles/employee/employee.component';
+import { RecruiterComponent } from './components/professional/roles/recruiter/recruiter.component';
 
 
 @NgModule({
-  declarations: [FormComponent, PersonalComponent, ProfessionalComponent],
+  declarations: [FormComponent, PersonalComponent, ProfessionalComponent, EmployeeComponent, RecruiterComponent],
     imports: [
         CommonModule,
         FormRoutingModule,
@@ -33,7 +35,7 @@ import { ProfessionalComponent } from './components/professional/professional.co
         DateRangeModule,
         FilesUploadModule,
         SpinnerModule,
-        // UserPhotoModule,
+        UserPhotoModule,
         ButtonModule,
         StepperModule
   ]

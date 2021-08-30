@@ -83,7 +83,7 @@ export class DictionariesEffects{
                         countries: addDictionary(countries)
                     };
 
-                    console.log('dictionariess',dictionaries)
+                    // console.log('dictionariess',dictionaries)
 
                     return fromActions.ReadSuccess(dictionaries);
                 }),

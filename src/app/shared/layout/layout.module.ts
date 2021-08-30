@@ -1,3 +1,4 @@
+import { UserPhotoModule } from './user-photo/user-photo.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -6,7 +7,11 @@ import { CommonModule } from '@angular/common';
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule
+    CommonModule,
+    UserPhotoModule
+  ],
+  exports:[
+    UserPhotoModule
   ]
 })
 export class LayoutModule { }
