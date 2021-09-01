@@ -8,19 +8,18 @@ import { Store, select } from '@ngrx/store';
 import * as fromRoot from '@app/store';
 import * as fromDictionaries from '@app/store/dictionaries';
 import * as fromUser from '@app/store/user';
-// import * as fromForm from '../../store/form';
+import * as fromForm from '../../store/form';
 
-// import { PersonalForm } from './components/personal/personal.component';
-// import { ProfessionalForm } from './components/professional/professional.component';
 
 import { StepperService } from './components/stepper/services';
 import { PersonalForm } from './components/personal/personal.component';
+import { ProfessionalForm } from './components/professional/professional.component';
 // import { ProfessionalForm } from './components/professional/professional.component';
-// import { MapperService } from './services';
+import { MapperService } from './services';
 
 export interface ProfileForm {
-    // personal: PersonalForm;
-    // professional: ProfessionalForm;
+    personal: PersonalForm;
+    professional: ProfessionalForm;
 }
 @Component({
     selector: 'app-form',
@@ -33,13 +32,13 @@ export class FormComponent implements OnInit, OnDestroy {
     dictionaries$: Observable<fromDictionaries.Dictionaries>;
     dictionariesIsReady$: Observable<boolean>;
 
-    // personal$: Observable<PersonalForm>;
-    // professional$: Observable<ProfessionalForm>;
+    personal$: Observable<PersonalForm>;
+    professional$: Observable<ProfessionalForm>;
 
     loading$: Observable<boolean>;
 
     private profile$: Observable<ProfileForm>;
-    // private user: fromUser.User;
+    private user: fromUser.User;
 
     private isEditing: boolean;
     private destroy = new Subject<any>();
@@ -49,17 +48,17 @@ export class FormComponent implements OnInit, OnDestroy {
         private router: Router,
         private store: Store<fromRoot.State>,
         public stepper: StepperService,
-        // private mapper: MapperService
+        private mapper: MapperService
     ) { }
 
     ngOnInit(): void {
 
-        // this.user = this.route.snapshot.data.user;
-        // this.isEditing = !!this.user;
+        this.user = this.route.snapshot.data.user;
+        this.isEditing = !!this.user;
 
-        // this.profile$ = this.store.pipe(select(fromForm.getFormState));
-        // this.personal$ = this.store.pipe(select(fromForm.getPersonalForm));
-        // this.professional$ = this.store.pipe(select(fromForm.getProfessionalForm));
+        this.profile$ = this.store.pipe(select(fromForm.getFormState));
+        this.personal$ = this.store.pipe(select(fromForm.getPersonalForm));
+        this.professional$ = this.store.pipe(select(fromForm.getProfessionalForm));
 
         // this.store.pipe(
         //     select(fromDictionaries.getDictionaries)
@@ -76,21 +75,21 @@ export class FormComponent implements OnInit, OnDestroy {
 
         this.loading$ = this.store.pipe(select(fromUser.getLoading));
 
-        // if (this.user) {
-        //     const form = this.mapper.userToForm(this.user);
-        //     this.store.dispatch(new fromForm.Set(form));
-        // }
+        if (this.user) {
+            const form = this.mapper.userToForm(this.user);
+            this.store.dispatch(fromForm.Set({form}));
+        }
 
         this.stepper.init([
-            { key: 'professional', label: 'Professional' },
             { key: 'personal', label: 'Personal' },
+            { key: 'professional', label: 'Professional' }
         ]);
 
         this.stepper.complete$.pipe(
-            // switchMap(() => zip(this.profile$, this.dictionaries$)),
+            switchMap(() => zip(this.profile$, this.dictionaries$)),
             takeUntil(this.destroy)
-        ).subscribe(() => {
-            // this.onComplete(profile, this.user, dictionaries);
+        ).subscribe(([profile,dictionaries]) => {
+            this.onComplete(profile, this.user, dictionaries);
             console.log('completed');
 
         });
@@ -106,37 +105,35 @@ export class FormComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.destroy.next();
         this.destroy.complete();
-        // this.store.dispatch(new fromForm.Clear());
+        this.store.dispatch(fromForm.Clear());
     }
 
     get title(): string {
         return this.isEditing ? 'Edit Profile' : 'New Profile';
     }
 
-    onChangedPersonal(data: PersonalForm): void {
-        // this.store.dispatch(new fromForm.Update({ personal: data }));
-        console.log('data',data);
-
+    onChangedPersonal(data: any): void {
+        this.store.dispatch(fromForm.Update({ changes:{personal:data} }));
     }
 
     onChangedProfessional(data: any): void {
-        // this.store.dispatch(new fromForm.Update({ professional: data }));
-        console.log('data',data);
-
+        this.store.dispatch(fromForm.Update({ changes:{professional:data} }));
     }
 
-    // private onComplete(profile: ProfileForm, user: fromUser.User, dictionaries: fromDictionaries.Dictionaries): void {
-    //     if (this.isEditing) {
+    private onComplete(profile: ProfileForm, user: fromUser.User, dictionaries: fromDictionaries.Dictionaries): void {
+        if (this.isEditing) {
 
-    //         const request = this.mapper.formToUserUpdate(profile, user, dictionaries);
-    //         this.store.dispatch(new fromUser.Update(request));
+            const request = this.mapper.formToUserUpdate(profile, user, dictionaries);
+            this.store.dispatch(fromUser.Update( {user:request} ));
 
-    //     } else {
+        } else {
 
-    //         const request = this.mapper.formToUserCreate(profile, dictionaries);
-    //         this.store.dispatch(new fromUser.Create(request));
+            const request = this.mapper.formToUserCreate(profile, dictionaries);
+            this.store.dispatch(fromUser.Create({user:request}));
 
-    //     }
-    // }
+        }
+    }
 
 }
+
+
